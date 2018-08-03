@@ -1,5 +1,21 @@
 var socket = io();
 
+function scrollToBottom () {
+//Selectors
+var messages = jQuery('#messages');
+var newMessage = messages.children('li:last-child');
+//Heights
+var clientHeight = messages.prop('clientHeight');
+var scrollTop = messages.prop('scrollTop');
+var scrollHeight = messages.prop('scrollHeight');
+var newMessageHeight = newMessage.innerHeight();
+var lastMessageHeight = newMessage.prev().innerHeight();
+
+if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    messages.scrollTop(scrollHeight);
+}
+}
+
    socket.on('connect', function () {
     console.log('connected to server');
 
@@ -19,7 +35,7 @@ var socket = io();
         });
 
         jQuery('#messages').append(html);
-
+        scrollToBottom();
     })
 
     socket.on ('newLocationMessage', function (message) {
@@ -33,7 +49,7 @@ var socket = io();
         });
 
         jQuery('#messages').append(html);
-
+        scrollToBottom();
     })
 
    jQuery('#message-form').on('submit', function(e) {
@@ -58,7 +74,7 @@ var socket = io();
     locationButton.attr('disabled', 'disabled').text('Sending Location ...');
 
     navigator.geolocation.getCurrentPosition(function (position) {
-        locationButton.removeAttr('disabled').text('Sending Location...');
+        locationButton.removeAttr('disabled').text('Sending Location');
         socket.emit('createLocationMessage', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
