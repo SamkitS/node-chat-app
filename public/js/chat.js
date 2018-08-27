@@ -77,7 +77,6 @@ if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHei
        var messageTextbox = jQuery('[name=message]');
 
        socket.emit('createMessage', {
-           from: 'User',
            text: messageTextbox.val()
        }, function () {
             messageTextbox.val('')
